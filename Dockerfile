@@ -1,39 +1,38 @@
-FROM ficusio/nodejs-base:0.12
+FROM alpine:3.2
 
-WORKDIR /app
-ONBUILD COPY package.json npm-shrinkwrap.json* /app/
+ENV NODEJS_VERSION 0.12.7
 
-# Install NPM deps first to allow reusing of Docker image cache when package.json
-# is not changed:
-#
-# 1. install development deps that might be needed to compile binary Node.js modules;
-# 2. install NPM-managed application deps, but don't install devDependencies;
-# 3. remove development deps from step 1;
-# 4. clear various NPM caches.
-#
-ONBUILD RUN deps="make gcc g++ python musl-dev" \
+RUN echo "==> Installing dependencies..." \
  && apk update \
- && apk add bash $deps \
- && npm install --production \
- && apk del $deps \
+ && apk add \
+    curl make gcc g++ python paxctl \
+    musl-dev openssl-dev zlib-dev \
+ && mkdir -p /root/nodejs \
+ && cd /root/nodejs \
+ && echo "==> Downloading..." \
+ && curl -sSL http://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}.tar.gz | tar -xz \
+ && cd node-* \
+ && echo "==> Configuring..." \
+ && readonly NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \
+ && echo "using upto $NPROC threads" \
+ && ./configure \
+   --prefix=/usr \
+   --shared-openssl \
+   --shared-zlib \
+ && make -j${NPROC} -C out mksnapshot \
+ && paxctl -c -m out/Release/mksnapshot \
+ && make -j${NPROC} \
+ && echo "==> Installing..." \
+ && make install \
+ && echo "==> Finishing..." \
+ && apk del \
+    curl make gcc g++ python paxctl \
+    musl-dev openssl-dev zlib-dev \
+ && apk add \
+    openssl libgcc libstdc++ \
  && rm -rf /var/cache/apk/* \
+ && echo "==> Updating NPM..." \
+ && npm i -g npm \
  && npm cache clean \
- && rm -rf ~/.node-gyp /tmp/npm*
-
-# Copy app files to a temporary dir to prevent just installed /app/node_modules
-# from getting overwritten by the ones copied from developer's machine.
-#
-ONBUILD COPY . /tmp/app/
-
-# Move app files from the temporary dir to WORKDIR.
-#
-# Bash and dotglob are here to move all files, including hidden ones.
-# Which is surprisingly non-obvious operation.
-#
-ONBUILD RUN bash -c 'shopt -s dotglob \
- && rm -rf /tmp/app/{node_modules,Dockerfile,Makefile,.dockerignore} \
- && cp -pRf /tmp/app/* /app/ \
- && rm -rf /tmp/app'
-
-
-CMD ["node", "index.js"]
+ && rm -rf ~/.node-gyp /tmp/npm* \
+ && rm -rf /root/nodejs
