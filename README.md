@@ -9,5 +9,5 @@ Alpine Linux-based Nodejs Container for Docker
 [MIT](LICENSE)
 
 [docker-img]: https://img.shields.io/badge/docker-ready-blue.svg
-[docker-url]: https://hub.docker.com/r/irakli/nodebootstrap-hello/
+[docker-url]: https://hub.docker.com/r/irakli/alpine-nodejs/
 
