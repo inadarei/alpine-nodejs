@@ -4,7 +4,7 @@ MAINTAINER Irakli Nadareishvili
 ENV VERSION=v0.12.7
 # ENV VERSION=v4.2.1
 
-ENV REFRESHED_AT 2015-10-28-11_11EST
+ENV REFRESHED_AT 2015-10-28-06_06EST
 
 RUN apk add --update curl make gcc g++ python linux-headers paxctl \
     libgcc libstdc++ musl-dev openssl-dev zlib-dev \
