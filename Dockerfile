@@ -16,13 +16,10 @@ RUN apk add --update curl make gcc g++ python linux-headers paxctl \
  && make -j$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \
  && make install \
  && paxctl -cm /usr/bin/node \
- && npm i -g npm \
+ && npm install -g npm \
  && npm cache clean \
- && rm -rf /root/src \
-    /usr/share/man /tmp/* /var/cache/apk/* /root/.npm /root/.node-gyp \
-    /usr/lib/node_modules/npm/man /usr/lib/node_modules/npm/doc /usr/lib/node_modules/npm/html
-    
-# We may not remove build tools because many (native) npm modules require them for installation.
-# That said, you may want to add following line to the end of your Dockerfiles, if you want
-# to keep things as lean as possible:
-# RUN apk del curl make gcc g++ python linux-headers paxctl \
+ && apk del make gcc libgcc g++ libstdc++ python linux-headers \
+    paxctl musl-dev openssl-dev zlib-dev \
+ && rm -rf /root/src /tmp/* /usr/share/man /var/cache/apk/* \
+    /root/.npm /root/.node-gyp /usr/lib/node_modules/npm/man \
+		/usr/lib/node_modules/npm/doc /usr/lib/node_modules/npm/html
