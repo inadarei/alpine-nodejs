@@ -21,7 +21,7 @@ apk search --update imagemagick
 or:
 
 ```
-apk add make gcc g++ python linux-header
+apk add --update make gcc g++ python linux-header
 ```
 
 ## License
