@@ -2,7 +2,9 @@
 
 [![Docker Hub Link][docker-img]][docker-url]
 
-Alpine Linux-based Nodejs Container for Docker
+Tiny, Alpine Linux-based Nodejs Container for Docker.
+
+Compare 50MB of this container with typical 500MB to 800MB sizes you get with Ubuntu-based images.
 
 ## License
 
