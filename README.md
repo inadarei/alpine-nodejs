@@ -1,6 +1,7 @@
 # alpine-nodejs
 
 [![Docker Hub Link][docker-img]][docker-url]
+[![](https://badge.imagelayers.io/irakli/alpine-nodejs:latest.svg)](https://imagelayers.io/?images=irakli/alpine-nodejs:latest 'Get your own badge on imagelayers.io')
 
 Tiny, Alpine Linux-based Nodejs Container for Docker.
 
