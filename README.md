@@ -1,3 +1,6 @@
+**DEPRECATED** project. Use https://github.com/inadarei/node-alpine instead
+
+
 # alpine-nodejs
 
 [![Docker Hub Link][docker-img]][docker-url]
